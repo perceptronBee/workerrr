@@ -65,8 +65,8 @@ def build() -> dict:
                 STATUS_BRANCH = "night-worker"
 
                 # Filled after the reviewed worker/job release commit is pushed.
-                WORKER_COMMIT = "3854bdba39841012f3e37c1459e7f337e3d4bbfc"
-                WORKER_TREE_SHA256 = "f7f1b2d62592ab00f6b8e321d9c70e499dca9616b5a9437de956642c8083b557"
+                WORKER_COMMIT = "c3f96f79f9acfd88634855c6ac1baad0709196ba"
+                WORKER_TREE_SHA256 = "577d078afcdc68624929fc673b4f57f2085f7ca95d9451a23a35cfa7cfac4397"
                 JOB_SPEC_RELPATH = "jobs/role_aware_v1/job.json"
                 JOB_SPEC_SHA256 = "1d7e4275d0aeaaab5703e36d860f353f73d417e4342a81571a75d9e030a33f8f"
 
