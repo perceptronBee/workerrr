@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "job_id": "halsp-role-aware-v1",
+  "source": {
+    "repo_url": "https://github.com/sp4cing-itu/efficient_ai_test_repo.git",
+    "commit": "087725a74be5407d750c537ac701d82531c68a91"
+  },
+  "dataset": {
+    "repo": "uoft-cs/cifar100",
+    "config": "cifar100",
+    "revision": "aadb3af77e9048adbea6b47c21a81e47dd092ae5",
+    "expected_splits": {
+      "train": 50000,
+      "test": 10000
+    },
+    "expected_columns": [
+      "coarse_label",
+      "fine_label",
+      "img"
+    ],
+    "fine_classes": 100,
+    "coarse_classes": 20
+  },
+  "steps": [
+    {
+      "id": "prepare",
+      "handler": "prepare_cifar100",
+      "depends_on": [],
+      "when": null,
+      "params": {
+        "allow_network_fallback": true
+      }
+    },
+    {
+      "id": "run_role_aware",
+      "handler": "role_aware_v1",
+      "depends_on": [
+        "prepare"
+      ],
+      "when": null,
+      "params": {}
+    }
+  ],
+  "max_runtime_seconds": 43200
+}

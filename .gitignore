@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Runtime state and large artifacts stay outside Git.
+.worker-state/
+artifacts/
+data/
+*.tar.gz
+*.sha256
+
