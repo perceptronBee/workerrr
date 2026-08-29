@@ -1,7 +1,105 @@
 {
+  "artifact": {
+    "kind": "verified_directory",
+    "path": "/content/drive/MyDrive/HALSP/role_aware_v1/halsp-role-aware-v1.tar.gz",
+    "sha256": "c651a102227444aa4b4bcf413c97b1f8f4f718fea690cbf65fa9a1b6ffaa6076",
+    "size_bytes": 111974784,
+    "verified": true
+  },
   "gpu": "NVIDIA L4",
   "job_sha256": "1d7e4275d0aeaaab5703e36d860f353f73d417e4342a81571a75d9e030a33f8f",
-  "state": "running",
-  "updated_at_utc": "2026-08-29T08:35:24.875737+00:00",
+  "manifest": {
+    "failure": null,
+    "finished_at_utc": "2026-08-29T08:36:21.589419+00:00",
+    "job_id": "halsp-role-aware-v1",
+    "job_spec_sha256": "7950e1cecbacd743e2734250a22b58260579cd751e52d8160fb24eec0988544e",
+    "outputs": {
+      "prepare": {
+        "cache_source": "huggingface_cache",
+        "manifest": {
+          "cache_source": "huggingface_cache",
+          "columns": [
+            "coarse_label",
+            "fine_label",
+            "img"
+          ],
+          "created_at_utc": "2026-08-29T01:54:53.335360+00:00",
+          "dataset_spec": {
+            "coarse_classes": 20,
+            "config": "cifar100",
+            "expected_columns": [
+              "coarse_label",
+              "fine_label",
+              "img"
+            ],
+            "expected_splits": {
+              "test": 10000,
+              "train": 50000
+            },
+            "fine_classes": 100,
+            "repo": "uoft-cs/cifar100",
+            "revision": "aadb3af77e9048adbea6b47c21a81e47dd092ae5"
+          },
+          "dataset_spec_sha256": "5f4366d23b5f3522e80ef1c1d93713af0ffa9fe5cca2823d0be39d0f35b148f0",
+          "fine_label_names_sha256": "fa0f81e0b5448ed461487deae9e0f85db13bf7db17a55970d784aa280bbd7cb5",
+          "fingerprints": {
+            "test": "193be2aeaeb3c378",
+            "train": "047a0fee608abe9b"
+          },
+          "schema_version": 1,
+          "split_rows": {
+            "test": 10000,
+            "train": 50000
+          }
+        },
+        "path": "/content/halsp-role-aware-v1/prepared_data/cifar100-aadb3af77e9048adbea6b47c21a81e47dd092ae5"
+      },
+      "run_role_aware": {
+        "compact": {
+          "endpoint_count": 6,
+          "stage_b_open": false,
+          "test_sparse_top1": {
+            "probe_momentum-none-s0": 75.25,
+            "probe_momentum-none-s1": 74.75,
+            "role_aware_taylor-none-s0": 74.32,
+            "role_aware_taylor-none-s1": 73.87,
+            "structural_taylor-none-s0": 73.72,
+            "structural_taylor-none-s1": 74.3
+          }
+        },
+        "endpoint_count": 6,
+        "stage_b_open": false,
+        "status": "completed"
+      }
+    },
+    "schema_version": 1,
+    "source": {
+      "commit": "087725a74be5407d750c537ac701d82531c68a91",
+      "git_tree": "45dbc839f9fe1c6fde407f6ef724541516f2b2f9",
+      "repo_url": "https://github.com/sp4cing-itu/efficient_ai_test_repo.git",
+      "source_file_sha256": "1b1a1e8e3f0c10c1a592de6c5cc49f7784d11aaea0df0b8612b077a0a4801700",
+      "transport": "embedded_frozen_snapshot"
+    },
+    "started_at_utc": "2026-08-29T01:54:41.724114+00:00",
+    "status": "completed",
+    "steps": [
+      {
+        "finished_at_utc": "2026-08-29T01:54:53.340959+00:00",
+        "handler": "prepare_cifar100",
+        "id": "prepare",
+        "started_at_utc": "2026-08-29T01:54:41.724114+00:00",
+        "status": "completed"
+      },
+      {
+        "finished_at_utc": "2026-08-29T08:36:21.589389+00:00",
+        "handler": "role_aware_v1",
+        "id": "run_role_aware",
+        "started_at_utc": "2026-08-29T01:54:53.340978+00:00",
+        "status": "completed"
+      }
+    ]
+  },
+  "state": "completed",
+  "updated_at_utc": "2026-08-29T08:36:31.366307+00:00",
   "worker_commit": "c3f96f79f9acfd88634855c6ac1baad0709196ba"
 }
