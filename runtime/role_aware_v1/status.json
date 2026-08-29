@@ -1,24 +1,4 @@
 {
-  "artifact": {
-    "kind": "verified_directory",
-    "path": "/content/drive/MyDrive/HALSP/role_aware_v1/terminal-worker-failure.tar.gz",
-    "sha256": "4e6452b32079e06c12b8707335cad5763aa0dec2e474e936e7cc005dd6d74a72",
-    "size_bytes": 780,
-    "verified": true
-  },
-  "gpu": "NVIDIA L4",
-  "job_sha256": "1d7e4275d0aeaaab5703e36d860f353f73d417e4342a81571a75d9e030a33f8f",
-  "manifest": {
-    "failure": {
-      "message": "Command '['git', '-C', '/content/halsp-role-aware-v1/source', 'fetch', '--quiet', '--depth', '1', 'origin', '087725a74be5407d750c537ac701d82531c68a91']' returned non-zero exit status 128.",
-      "traceback": "Traceback (most recent call last):\n  File \"/content/pinned-workerrr/worker/worker.py\", line 609, in run_lifecycle\n    artifact_dir, manifest = execute_job(spec, registry, root)\n                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/pinned-workerrr/worker/worker.py\", line 568, in execute_job\n    source_manifest = checkout_source(normalized[\"source\"], source_dir)\n  File \"/content/pinned-workerrr/worker/worker.py\", line 286, in checkout_source\n    subprocess.run(command, check=True, shell=False)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 577, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['git', '-C', '/content/halsp-role-aware-v1/source', 'fetch', '--quiet', '--depth', '1', 'origin', '087725a74be5407d750c537ac701d82531c68a91']' returned non-zero exit status 128.\n",
-      "type": "CalledProcessError"
-    },
-    "finished_at_utc": "2026-08-29T01:39:00.584117+00:00",
-    "schema_version": 1,
-    "status": "failed"
-  },
-  "state": "failed",
-  "updated_at_utc": "2026-08-29T01:39:00.605596+00:00",
-  "worker_commit": "ae7eb45913e35b2d9a46f1f255a369a22b16674f"
+  "state": "booting",
+  "updated_at_utc": "2026-08-29T01:41:29.917525+00:00"
 }
