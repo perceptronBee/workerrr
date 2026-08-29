@@ -1,24 +1,4 @@
 {
-  "artifact": {
-    "kind": "verified_directory",
-    "path": "/content/drive/MyDrive/HALSP/role_aware_v1/terminal-worker-failure.tar.gz",
-    "sha256": "ed0201c1a501b74b40649fee25d668c50239bbd84c7711053383375dcd869bdc",
-    "size_bytes": 803,
-    "verified": true
-  },
-  "gpu": "NVIDIA L4",
-  "job_sha256": "1d7e4275d0aeaaab5703e36d860f353f73d417e4342a81571a75d9e030a33f8f",
-  "manifest": {
-    "failure": {
-      "message": "Command '['git', 'ls-remote', '--heads', 'https://github.com/sp4cing-itu/efficient_ai_test_repo.git']' returned non-zero exit status 128.",
-      "traceback": "Traceback (most recent call last):\n  File \"/content/pinned-workerrr/worker/worker.py\", line 647, in run_lifecycle\n    artifact_dir, manifest = execute_job(spec, registry, root)\n                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/pinned-workerrr/worker/worker.py\", line 606, in execute_job\n    source_manifest = checkout_source(normalized[\"source\"], source_dir)\n  File \"/content/pinned-workerrr/worker/worker.py\", line 303, in checkout_source\n    advertised = subprocess.run(\n                 ~~~~~~~~~~~~~~^\n        [\"git\", \"ls-remote\", \"--heads\", repo_url],\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        text=True,\n        ^^^^^^^^^^\n    ).stdout\n    ^\n  File \"/usr/lib/python3.13/subprocess.py\", line 577, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['git', 'ls-remote', '--heads', 'https://github.com/sp4cing-itu/efficient_ai_test_repo.git']' returned non-zero exit status 128.\n",
-      "type": "CalledProcessError"
-    },
-    "finished_at_utc": "2026-08-29T01:45:00.488420+00:00",
-    "schema_version": 1,
-    "status": "failed"
-  },
-  "state": "failed",
-  "updated_at_utc": "2026-08-29T01:45:01.323958+00:00",
-  "worker_commit": "dc63ae9bf61758bb3933c9779f3c8886ac1f6c71"
+  "state": "booting",
+  "updated_at_utc": "2026-08-29T01:54:04.904970+00:00"
 }
