@@ -3,6 +3,10 @@
 This data-only job binds the experiment to HALSP commit
 `087725a74be5407d750c537ac701d82531c68a91` and the pinned Hugging Face
 CIFAR-100 revision. It exposes no commands, scripts, modules, or entry points.
+The single required `halsp_all.py` source snapshot is embedded in the reviewed
+worker release and verified against SHA-256
+`1b1a1e8e3f0c10c1a592de6c5cc49f7784d11aaea0df0b8612b077a0a4801700`;
+Colab does not connect to the private upstream repository.
 
 The fixed handler runs six Stage-A endpoints: full-support probe momentum,
 structural Taylor, and role-aware Taylor on seeds 0 and 1. Layer1/layer2 retain

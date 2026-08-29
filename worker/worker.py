@@ -46,6 +46,10 @@ STEP_ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 COMMIT_PATTERN = re.compile(r"^[0-9a-fA-F]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-fA-F]{64}$")
 HEAD_REF_PATTERN = re.compile(r"^refs/heads/[A-Za-z0-9][A-Za-z0-9._/-]*$")
+EMBEDDED_HALSP_REPOSITORY = "https://github.com/sp4cing-itu/efficient_ai_test_repo.git"
+EMBEDDED_HALSP_COMMIT = "087725a74be5407d750c537ac701d82531c68a91"
+EMBEDDED_HALSP_TREE = "45dbc839f9fe1c6fde407f6ef724541516f2b2f9"
+EMBEDDED_HALSP_FILE_SHA256 = "1b1a1e8e3f0c10c1a592de6c5cc49f7784d11aaea0df0b8612b077a0a4801700"
 DANGEROUS_KEYS = {
     "args",
     "argv",
@@ -300,6 +304,22 @@ def checkout_source(source: Mapping[str, str], destination: Path) -> dict[str, s
     destination = destination.resolve()
     if destination.exists() and any(destination.iterdir()):
         raise JobValidationError(f"Source destination is not empty: {destination}")
+    if repo_url == EMBEDDED_HALSP_REPOSITORY and commit.lower() == EMBEDDED_HALSP_COMMIT:
+        snapshot = Path(__file__).resolve().parent / "frozen_source" / "halsp_all.py"
+        if not snapshot.is_file() or sha256_file(snapshot) != EMBEDDED_HALSP_FILE_SHA256:
+            raise JobValidationError("Embedded HALSP source snapshot identity mismatch")
+        target = destination / "src" / "halsp_all.py"
+        target.parent.mkdir(parents=True, exist_ok=False)
+        shutil.copy2(snapshot, target)
+        if sha256_file(target) != EMBEDDED_HALSP_FILE_SHA256:
+            raise JobValidationError("Materialized HALSP source snapshot hash mismatch")
+        return {
+            "repo_url": repo_url,
+            "commit": commit.lower(),
+            "git_tree": EMBEDDED_HALSP_TREE,
+            "source_file_sha256": EMBEDDED_HALSP_FILE_SHA256,
+            "transport": "embedded_frozen_snapshot",
+        }
     advertised = subprocess.run(
         ["git", "ls-remote", "--heads", repo_url],
         check=True,

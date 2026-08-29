@@ -76,6 +76,7 @@ def build() -> dict:
                 REQUIRED_GPU = "NVIDIA L4"
                 HARD_DEADLINE_SECONDS = 12 * 60 * 60
                 HEARTBEAT_SECONDS = 10 * 60
+                FAILURE_GRACE_SECONDS = 10 * 60
                 """
             ),
             code(
@@ -113,6 +114,13 @@ def build() -> dict:
                             return
                         runtime.unassign()
                         released = True
+
+                def wait_failure_grace():
+                    print(
+                        "Failure evidence is saved. Keeping the runtime open for "
+                        f"{FAILURE_GRACE_SECONDS // 60} minutes for inspection."
+                    )
+                    time.sleep(FAILURE_GRACE_SECONDS)
 
                 watchdog = threading.Timer(HARD_DEADLINE_SECONDS, release_once)
                 watchdog.daemon = True
@@ -165,6 +173,7 @@ def build() -> dict:
                         {"state": "booting", "updated_at_utc": utc_now()},
                         "worker: booting",
                     )
+
 
                     gpu_name = subprocess.run(
                         ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
@@ -312,7 +321,9 @@ def build() -> dict:
                     registry = builtin_registry()
                     register_handlers(registry)
                     sink = GitHubReportingDriveSink(DRIVE_ARTIFACT_DIR)
-                    run_lifecycle(spec, registry, WORK_ROOT, sink, release_once)
+                    lifecycle = run_lifecycle(spec, registry, WORK_ROOT, sink, lambda: None)
+                    if lifecycle.get("manifest", {}).get("status") != "completed":
+                        wait_failure_grace()
                 except BaseException as error:
                     terminal.set()
                     if reporter is not None:
@@ -328,6 +339,7 @@ def build() -> dict:
                             )
                         except Exception:
                             pass
+                    wait_failure_grace()
                     raise
                 finally:
                     terminal.set()

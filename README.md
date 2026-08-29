@@ -2,13 +2,15 @@
 
 This repository is a small, auditable control plane for a manually started
 Google Colab worker. It is deliberately separate from the shared HALSP research
-repository and does not push to, merge, or modify that repository.
+repository and does not push to, merge, modify, or access that repository at
+Colab runtime.
 
 The worker accepts a finite JSON DAG containing only registered handler names,
 parameters, dependencies, and simple comparisons. Remote job data cannot carry
 shell commands, Python code, modules, entry points, or arbitrary scripts. The
-worker repository, experiment source repository, CIFAR-100 dataset, and job file
-are all pinned by immutable identities and recorded in the final provenance.
+worker repository, the embedded hash-verified experiment source snapshot,
+CIFAR-100 dataset, and job file are all pinned by immutable identities and
+recorded in the final provenance.
 
 ## Frozen data source
 

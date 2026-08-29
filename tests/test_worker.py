@@ -13,6 +13,7 @@ from worker.worker import (
     JobValidationError,
     VerifiedDirectorySink,
     advertised_head_for_commit,
+    checkout_source,
     finalize_and_release,
     load_job_spec,
     run_steps,
@@ -54,6 +55,21 @@ def valid_spec() -> dict:
 
 
 class WorkerValidationTests(unittest.TestCase):
+    def test_private_source_is_materialized_from_frozen_worker_snapshot(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = checkout_source(
+                {
+                    "repo_url": "https://github.com/sp4cing-itu/efficient_ai_test_repo.git",
+                    "commit": "087725a74be5407d750c537ac701d82531c68a91",
+                },
+                Path(directory) / "source",
+            )
+            self.assertEqual(manifest["transport"], "embedded_frozen_snapshot")
+            self.assertEqual(
+                manifest["source_file_sha256"],
+                "1b1a1e8e3f0c10c1a592de6c5cc49f7784d11aaea0df0b8612b077a0a4801700",
+            )
+
     def test_source_commit_resolves_through_an_advertised_head(self) -> None:
         advertised = (
             f"{'b' * 40}\trefs/heads/main\n"
