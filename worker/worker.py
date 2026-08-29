@@ -45,6 +45,7 @@ JOB_ID_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,95}$")
 STEP_ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 COMMIT_PATTERN = re.compile(r"^[0-9a-fA-F]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-fA-F]{64}$")
+HEAD_REF_PATTERN = re.compile(r"^refs/heads/[A-Za-z0-9][A-Za-z0-9._/-]*$")
 DANGEROUS_KEYS = {
     "args",
     "argv",
@@ -265,6 +266,30 @@ def load_job_spec(path: str | os.PathLike[str], expected_sha256: str) -> dict[st
     return validate_job_spec(value)
 
 
+def advertised_head_for_commit(advertised: str, commit: str) -> str:
+    """Select a deterministic advertised branch whose tip is the exact commit."""
+
+    matches: list[str] = []
+    for line in advertised.splitlines():
+        parts = line.split("\t", 1)
+        if len(parts) != 2:
+            continue
+        sha, ref = parts
+        if (
+            sha.lower() == commit.lower()
+            and HEAD_REF_PATTERN.fullmatch(ref)
+            and ".." not in ref
+            and "//" not in ref
+            and not ref.endswith("/")
+        ):
+            matches.append(ref)
+    if not matches:
+        raise JobValidationError(
+            f"Requested commit {commit} is not the tip of an advertised branch"
+        )
+    return sorted(matches)[0]
+
+
 def checkout_source(source: Mapping[str, str], destination: Path) -> dict[str, str]:
     """Checkout an immutable public GitHub commit without invoking a shell."""
 
@@ -275,12 +300,20 @@ def checkout_source(source: Mapping[str, str], destination: Path) -> dict[str, s
     destination = destination.resolve()
     if destination.exists() and any(destination.iterdir()):
         raise JobValidationError(f"Source destination is not empty: {destination}")
+    advertised = subprocess.run(
+        ["git", "ls-remote", "--heads", repo_url],
+        check=True,
+        shell=False,
+        capture_output=True,
+        text=True,
+    ).stdout
+    remote_ref = advertised_head_for_commit(advertised, commit)
     destination.mkdir(parents=True, exist_ok=True)
     commands = [
         ["git", "init", "--quiet", str(destination)],
         ["git", "-C", str(destination), "remote", "add", "origin", repo_url],
-        ["git", "-C", str(destination), "fetch", "--quiet", "--depth", "1", "origin", commit],
-        ["git", "-C", str(destination), "checkout", "--quiet", "--detach", "FETCH_HEAD"],
+        ["git", "-C", str(destination), "fetch", "--quiet", "--depth", "1", "origin", remote_ref],
+        ["git", "-C", str(destination), "checkout", "--quiet", "--detach", commit],
     ]
     for command in commands:
         subprocess.run(command, check=True, shell=False)
@@ -300,7 +333,12 @@ def checkout_source(source: Mapping[str, str], destination: Path) -> dict[str, s
         capture_output=True,
         text=True,
     ).stdout.strip().lower()
-    return {"repo_url": repo_url, "commit": resolved, "git_tree": tree}
+    return {
+        "repo_url": repo_url,
+        "commit": resolved,
+        "advertised_ref": remote_ref,
+        "git_tree": tree,
+    }
 
 
 @dataclass(frozen=True)

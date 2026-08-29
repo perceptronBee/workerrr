@@ -12,6 +12,7 @@ from worker.worker import (
     HandlerRegistry,
     JobValidationError,
     VerifiedDirectorySink,
+    advertised_head_for_commit,
     finalize_and_release,
     load_job_spec,
     run_steps,
@@ -53,6 +54,21 @@ def valid_spec() -> dict:
 
 
 class WorkerValidationTests(unittest.TestCase):
+    def test_source_commit_resolves_through_an_advertised_head(self) -> None:
+        advertised = (
+            f"{'b' * 40}\trefs/heads/main\n"
+            f"{COMMIT}\trefs/heads/zeta\n"
+            f"{COMMIT}\trefs/heads/alpha\n"
+        )
+        self.assertEqual(
+            advertised_head_for_commit(advertised, COMMIT),
+            "refs/heads/alpha",
+        )
+
+    def test_source_commit_must_be_an_advertised_head_tip(self) -> None:
+        with self.assertRaises(JobValidationError):
+            advertised_head_for_commit(f"{'b' * 40}\trefs/heads/main\n", COMMIT)
+
     def test_requires_full_source_commit(self) -> None:
         spec = valid_spec()
         spec["source"]["commit"] = "main"
@@ -164,4 +180,3 @@ class ArtifactLifecycleTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
